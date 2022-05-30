@@ -151,7 +151,7 @@ class ChallengeCounter extends LitElement {
         text-align: right;
       }
       td {
-        padding: .5rem;
+        padding: .25rem;
       }
     `;
   }
@@ -283,10 +283,14 @@ class ChallengeCounter extends LitElement {
           <tfoot>
             <tr>
               <td>
-                Gesamt
+                <strong>
+                  Gesamt
+                </strong>
               </td>
               <td>
-                ${this.state.reduce((prev, curr) => prev + curr.count , 0)}
+                <strong>
+                  ${this.state.reduce((prev, curr) => prev + curr.count , 0)}
+                </strong>
               </td>
             </tr>
           </tfoot>
