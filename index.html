@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Challenge Counter</title>
+  <style>
+    :root {
+      --bg: white;
+      --text: #222;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #222;
+        --text: #ededed;
+      }
+    }
+    body {
+      display: grid;
+      place-content: center;
+      font-family: sans-serif;
+      min-height: 100vh;
+      text-align: center;
+      color: var(--text);
+      background-color: var(--bg);
+    }
+    my-element {
+      padding-bottom: 4rem;
+    }
+  </style>
+
+  <script src="./my-element.js?v1.1.1" type="module"></script>
+</head>
+
+<body>
+  <my-element></my-element>
+</body>
+
+</html>
