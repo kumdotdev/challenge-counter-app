@@ -46,7 +46,7 @@ const fetchAllData = async () => {
   return counts;
 };
 
-class MyElement extends LitElement {
+class ChallengeCounter extends LitElement {
   static get properties() {
     return {
       state: { type: Object },
@@ -191,9 +191,7 @@ class MyElement extends LitElement {
     const formData = new FormData(event.currentTarget);
     const email = formData.get('user');
     supabase.auth
-      .signIn({ email }, {
-        redirectTo: 'http://localhost:8080/cc'
-      })
+      .signIn({ email }, { redirectTo: 'https://cc.k4330.com' })
       .then((response) => {
         this.isLoginSubmitted = true;
         //response.error ? alert(response.error.message) : this.setToken(response);
@@ -309,4 +307,4 @@ class MyElement extends LitElement {
   }
 }
 
-customElements.define('my-element', MyElement);
+customElements.define('challenge-counter', ChallengeCounter);
