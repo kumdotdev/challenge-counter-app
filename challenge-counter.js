@@ -62,7 +62,7 @@ class ChallengeCounter extends LitElement {
     super();
     this.email = '';
     this.today = dayShort(new Date());
-    this.count = 0;
+    this.count = null;
     this.state = [];
   }
 
@@ -253,7 +253,7 @@ class ChallengeCounter extends LitElement {
      ${!this.isDashboard ? html`
 
         <span class="count">
-          ${COUNT_TARGET - this.count}
+          ${this.count !== null ? COUNT_TARGET - this.count : ''}
         </span><br />
         <span>
           ${niceDate(Date.now())}
