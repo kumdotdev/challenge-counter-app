@@ -208,10 +208,10 @@ class ChallengeCounter extends LitElement {
       .then((response) => {
         this.isAuthorized = false;
         this.isDashboard = false;
-        alert('Logout successful');
+        //alert('Logout successful');
       })
       .catch((err) => {
-        alert(err.response.text);
+        //alert(err.response.text);
       });
   }
 
