@@ -39,7 +39,7 @@ const fetchData = async (day) => {
 };
 
 const fetchAllData = async () => {
-  const { data: counts, error } = await supabase.from('count').select('*');
+  const { data: counts, error } = await supabase.from('count').select('*').order('day', { ascending: true });
   if (error) {
     console.log(error);
   }
