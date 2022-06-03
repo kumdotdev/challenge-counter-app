@@ -22,7 +22,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const COUNT_TARGET = 50;
 
-const dayShort = (date) => new Date(date).toISOString().substring(0,10);
+const dayShort = (date = Date.now()) => new Date(date).toISOString().substring(0,10);
 
 const niceDate = (date) => new Date(date).toLocaleDateString('de-DE', {
   year: 'numeric',
@@ -52,51 +52,47 @@ class ChallengeCounter extends LitElement {
       state: { type: Object },
       today: { type: String },
       count: { type: Number },
+      countTarget: { type: Number },
       isAuthorized: { type: Boolean },
       isLoginSubmitted: { type: Boolean },
       isDashboard: { type: Boolean },
+      isLoading: { type: Boolean },
     };
   }
 
   constructor() {
     super();
+    this.isLoading = true;
     this.email = '';
-    this.today = dayShort(new Date());
+    this.today = dayShort();
     this.count = null;
+    this.countTarget = null;
     this.state = [];
   }
 
   async connectedCallback() {
     super.connectedCallback();
-
-
-    // document.addEventListener('visibilitychange', () => {alert(document.visibilityState)})
-
-    // window.addEventListener('pageshow', event => {alert('pageshow event') });
-
-    // if ('wakeLock' in navigator) {
-    //   // Screen Wake Lock API supported 🎉
-    //   alert('lock supported')
-    // }
-
-    const user = supabase.auth.user();
-    if (user) {
-      this.isAuthorized = true;
-      const data = await fetchData(this.today);
-      this.count = data?.count || 0;
-      this.state = await fetchAllData();
-
-      const { data: count, error } = await supabase
-      .from('count')
-      .on('*', this.handleUpdates)
-      .subscribe()
-
-    }
+    supabase.auth.onAuthStateChange(async ()=> {
+      const user = supabase.auth.user();
+      if (user) {
+        this.isAuthorized = true;
+        const data = await fetchData(dayShort());
+        this.count = data?.count || 0;
+        this.state = await fetchAllData();
+        this.isLoading = false;
+        const { data: count, error } = await supabase
+          .from('count')
+          .on('*', this.handleUpdates)
+          .subscribe()
+      }
+      
+    })
+      
+      
   }
 
   handleUpdates = () => {
     fetchData(this.today).then(data=>{
-      this.count = data?.count || 0;
     });
 
     fetchAllData().then(data=> {
@@ -106,23 +102,18 @@ class ChallengeCounter extends LitElement {
 
   static get styles() {
     return css`
-      :host {
-        --bg: white;
-        --text: #222;
+      *, *::before, *::after {
+        margin: 0;
+        padding: 0;
       }
-      @media (prefers-color-scheme: dark) {
-        :host {
-          --bg: #222;
-          --text: #ededed;
-        }
-      }
-
-      body {
-        color: var(--text);
+      p {
+        margin-bottom: 1rem;
       }
       .count {
         font-size: 12rem;
-        letter-spacing: -5px;
+        letter-spacing: -.25rem;
+        cursor: pointer;
+        line-height: 1.1;
       }
       input {
         display: block;
@@ -141,6 +132,7 @@ class ChallengeCounter extends LitElement {
         padding: .5rem 1rem;
         font-size: inherit;
         color: inherit;
+        cursor: pointer;
       }
       .btn-count {
         font-size: 1.5rem;
@@ -215,13 +207,6 @@ class ChallengeCounter extends LitElement {
       });
   }
 
-  // handleOAuthLogin = async (provider) => {
-  //   // You need to enable the third party auth you want in Authentication > Settings
-  //   // Read more on: https://supabase.com/docs/guides/auth#third-party-logins
-  //   let { error } = await supabase.auth.signIn({ provider });
-  //   if (error) console.log("Error: ", error.message);
-  // };
-
   renderSignIn = () => html`
     <form @submit=${this.handleSignIn}>
       <input 
@@ -249,65 +234,76 @@ class ChallengeCounter extends LitElement {
         ${this.renderSignIn()}
       `
 
-    return html`
-     ${!this.isDashboard ? html`
-
-        <span class="count">
-          ${this.count !== null ? COUNT_TARGET - this.count : ''}
-        </span><br />
-        <span>
-          ${niceDate(Date.now())}
-          [${COUNT_TARGET}]
-        </span><br /><br />
-        <button 
-          class="btn-count"  
-          @click=${this.onClick}>
-          Count
-        </button>
-
-     ` : html`
-        <table>
-          <tbody>
-            ${this.state.map((entry) => html`
-              <tr>
-                <td>
-                  ${niceDate(entry.day)}
-                </td>
-                <td>
-                  ${entry.count}
-                </td>
-              </tr>
-              `
-            )}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td>
-                <strong>
-                  Gesamt
-                </strong>
-              </td>
-              <td>
-                <strong>
-                  ${this.state.reduce((prev, curr) => prev + curr.count , 0)}
-                </strong>
-              </td>
-            </tr>
-          </tfoot>
-        </table><br/><br/>
-        ${supabase.auth.user().email}<br/><br/>
-        <button  
-          @click=${this.handleLogOut}>
-          Logout
-        </button>
-     `}
-
-     <button
+    if (this.isDashboard) return html`
+      <button
         style="position: absolute; right:1rem; top:1rem"
         @click=${this.onUIClick}>
-        ${this.isDashboard ? 'close' : 'Dashboard'}
+        Close
       </button>
-    `;
+      <table>
+        <tbody>
+          ${this.state.map((entry) => html`
+            <tr>
+              <td>
+                ${niceDate(entry.day)}
+              </td>
+              <td>
+                ${entry.count}
+              </td>
+            </tr>
+            `
+          )}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>
+              <strong>
+                Gesamt
+              </strong>
+            </td>
+            <td>
+              <strong>
+                ${this.state.reduce((prev, curr) => prev + curr.count , 0)}
+              </strong>
+            </td>
+          </tr>
+        </tfoot>
+      </table><br/><br/>
+      ${supabase.auth.user().email}<br/><br/>
+      <button  
+        @click=${this.handleLogOut}>
+        Logout
+      </button>
+    `
+
+    // Default not loading state
+    if (!this.isLoading) return html`
+      <p>
+        ${COUNT_TARGET} Push Up Challenge<br/>
+        ${niceDate(Date.now())}
+      </p>
+      <p 
+        class="count"
+        @click=${this.onClick}
+        >
+        ${this.count !== null ? COUNT_TARGET - this.count < 0 ? '+' : '' : ''}${this.count !== null ? Math.abs(COUNT_TARGET - this.count) : ''}
+      </p>
+      <button 
+        class="btn-count"  
+        @click=${this.onClick}>
+        Count
+      </button>
+
+      <button
+        style="position: absolute; right:1rem; top:1rem"
+        @click=${this.onUIClick}>
+        Dashboard
+      </button>
+    `
+
+    return html`
+      loading ...
+     `
   }
 }
 

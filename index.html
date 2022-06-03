@@ -17,21 +17,23 @@
         --text: #ededed;
       }
     }
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+    }
     body {
       display: grid;
       place-content: center;
       font-family: sans-serif;
+      line-height: 1.5;
       min-height: 100vh;
       text-align: center;
       color: var(--text);
       background-color: var(--bg);
     }
-    challenge-counter {
-      padding-bottom: 4rem;
-    }
   </style>
 
-  <script src="./challenge-counter.js?v2.0.2" type="module"></script>
+  <script src="./challenge-counter.js?v2.1.0" type="module"></script>
 </head>
 
 <body>
