@@ -30,12 +30,20 @@ const niceDate = (date) => new Date(date).toLocaleDateString('de-DE', {
   day: 'numeric',
 })
 
-const fetchData = async (day) => {
-  const { data: counts, error } = await supabase.from('count').select('*').eq('day', day);
+const fetchProfile = async () => {
+  const { data: profile, error } = await supabase.from('profile').select('*').eq('id', supabase.auth.user().id).single();
   if (error) {
     console.log(error);
   }
-  return counts[0];
+  return profile;
+};
+
+const fetchData = async (day) => {
+  const { data: count, error } = await supabase.from('count').select('*').eq('day', day).single();
+  if (error) {
+    console.log(error);
+  }
+  return count;
 };
 
 const fetchAllData = async () => {
@@ -50,9 +58,9 @@ class ChallengeCounter extends LitElement {
   static get properties() {
     return {
       state: { type: Object },
+      user: { type: Object },
       today: { type: String },
       count: { type: Number },
-      countTarget: { type: Number },
       isAuthorized: { type: Boolean },
       isLoginSubmitted: { type: Boolean },
       isDashboard: { type: Boolean },
@@ -66,8 +74,8 @@ class ChallengeCounter extends LitElement {
     this.email = '';
     this.today = dayShort();
     this.count = null;
-    this.countTarget = null;
     this.state = [];
+    this.user = {};
   }
 
   async connectedCallback() {
@@ -75,6 +83,12 @@ class ChallengeCounter extends LitElement {
     supabase.auth.onAuthStateChange(async ()=> {
       const user = supabase.auth.user();
       if (user) {
+        const profileData = await fetchProfile();
+        this.user = {
+          ...user,
+          ...profileData,
+        }
+        // console.log(this.user);
         this.isAuthorized = true;
         const data = await fetchData(dayShort());
         this.count = data?.count || 0;
@@ -106,6 +120,9 @@ class ChallengeCounter extends LitElement {
         margin: 0;
         padding: 0;
       }
+      * {
+        -webkit-appearance: none;
+      }
       p {
         margin-bottom: 1rem;
       }
@@ -116,10 +133,10 @@ class ChallengeCounter extends LitElement {
         line-height: 1.1;
       }
       input {
-        display: block;
+        display: inline-block;
         font-size: inherit;
         color: inherit;
-        padding: .75rem 1rem;
+        padding: .5rem 1rem;
         margin-bottom: 1rem;
         border: 1px solid var(--text);
         background-color: var(--bg);
@@ -176,6 +193,25 @@ class ChallengeCounter extends LitElement {
   async onUIClick() {
     if (!this.isDashboard) this.state = await fetchAllData();
     this.isDashboard = !this.isDashboard;
+  }
+
+  async onSubmitSetTarget(event) {
+    event.preventDefault();
+    const { data, error } = 
+      await supabase
+        .from('profile')
+        .update({
+          count_target : event.currentTarget.countTarget.value,
+        })
+        .eq('id', this.user.id).single();
+
+    if (data) {
+      this.user = {
+        ...this.user,
+        count_target: data.count_target,
+      }
+    }
+    console.log(data);
   }
 
   async handleSignIn(event) {
@@ -269,6 +305,16 @@ class ChallengeCounter extends LitElement {
           </tr>
         </tfoot>
       </table><br/><br/>
+      <form @submit=${this.onSubmitSetTarget}>
+        <input 
+          type="number"
+          name="countTarget"
+          .value=${this.user.count_target} 
+          size="8"
+          style="max-width: 4rem"
+          />
+        <button submit>Set</button>
+      </form><br/>
       ${supabase.auth.user().email}<br/><br/>
       <button  
         @click=${this.handleLogOut}>
@@ -279,14 +325,14 @@ class ChallengeCounter extends LitElement {
     // Default not loading state
     if (!this.isLoading) return html`
       <p>
-        ${COUNT_TARGET} Push Up Challenge<br/>
+        ${this.user.count_target} Push Up Challenge<br/>
         ${niceDate(Date.now())}
       </p>
       <p 
         class="count"
         @click=${this.onClick}
         >
-        ${this.count !== null ? COUNT_TARGET - this.count < 0 ? '+' : '' : ''}${this.count !== null ? Math.abs(COUNT_TARGET - this.count) : ''}
+        ${this.count !== null ? this.user.count_target - this.count < 0 ? '+' : '' : ''}${this.count !== null ? Math.abs(this.user.count_target - this.count) : ''}
       </p>
       <button 
         class="btn-count"  
