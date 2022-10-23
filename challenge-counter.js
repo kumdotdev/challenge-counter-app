@@ -5,7 +5,7 @@
 // dann kam noch jwt mit php dazu, als übung ... und die speicherung
 // auf dem server als json in datei
 
-// dann nooch mal die anbindung an supabase ... 
+// dann nooch mal die anbindung an supabase ...
 
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
 
@@ -16,51 +16,66 @@ import {
 } from 'https://unpkg.com/lit-element/lit-element.js?module';
 
 const SUPABASE_KEY =
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzMTg5Njc0NywiZXhwIjoxOTQ3NDcyNzQ3fQ.4z6eizw4N98xNyfEW7NJvpGKCcLOsXHbzDLK5X0BMfw';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzMTg5Njc0NywiZXhwIjoxOTQ3NDcyNzQ3fQ.4z6eizw4N98xNyfEW7NJvpGKCcLOsXHbzDLK5X0BMfw';
 const SUPABASE_URL = 'https://fbvcrmpsstlvjvayifbe.supabase.co';
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const COUNT_TARGET = 50;
 
-const dayShort = (date = Date.now()) => new Date(date).toISOString().substring(0,10);
+const dayShort = (date = Date.now()) =>
+  new Date(date).toISOString().substring(0, 10);
 
-const niceDate = (date) => new Date(date).toLocaleDateString('de-DE', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-})
+const niceDate = (date) =>
+  new Date(date).toLocaleDateString('de-DE', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 
 const fetchProfile = async () => {
-  const { data: profile, error } = await supabase.from('profile').select('*').eq('id', supabase.auth.user().id).single();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  const { user } = session;
+  const { data: profile, error } = await supabase
+    .from('profile')
+    .select('*')
+    .eq('id', user.id)
+    .single();
   if (error) {
     console.log(error);
   }
   return profile;
 };
 
-const fetchData = async (day) => {
-  const { data: count, error } = await supabase.from('count').select('*').eq('day', day).single();
+const fetchData = async () => {
+  const { data, error } = await supabase
+    .from('count')
+    .select('*', { count: 'exact' })
+    .gte('created_at', new Date().toDateString());
+  // .lte('created_at', new Date().toDateString());
+
   if (error) {
     console.log(error);
   }
-  return count;
+  return data;
 };
 
 const fetchAllData = async () => {
-  const { data: counts, error } = await supabase.from('count').select('*').order('day', { ascending: true });
+  const { data, error } = await supabase.from('count').select('*');
   if (error) {
     console.log(error);
   }
-  return counts;
+  return data;
 };
 
 class ChallengeCounter extends LitElement {
   static get properties() {
     return {
-      state: { type: Object },
+      state: { type: Array },
+      history: { type: Array },
       user: { type: Object },
-      today: { type: String },
-      count: { type: Number },
+      email: { type: String },
       isAuthorized: { type: Boolean },
       isLoginSubmitted: { type: Boolean },
       isDashboard: { type: Boolean },
@@ -70,53 +85,53 @@ class ChallengeCounter extends LitElement {
 
   constructor() {
     super();
-    this.isLoading = true;
-    this.email = '';
-    this.today = dayShort();
-    this.count = null;
     this.state = [];
+    this.history = [];
     this.user = {};
+    this.email = '';
+    this.isAuthorized = false;
+    this.isLoginSubmitted = false;
+    this.isDashboard = false;
+    this.isLoading = true;
   }
 
   async connectedCallback() {
     super.connectedCallback();
-    supabase.auth.onAuthStateChange(async ()=> {
-      const user = supabase.auth.user();
+    supabase.auth.onAuthStateChange(async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const { user } = session;
       if (user) {
         const profileData = await fetchProfile();
         this.user = {
           ...user,
           ...profileData,
-        }
-        // console.log(this.user);
+        };
         this.isAuthorized = true;
-        const data = await fetchData(dayShort());
-        this.count = data?.count || 0;
-        this.state = await fetchAllData();
-        this.isLoading = false;
-        const { data: count, error } = await supabase
-          .from('count')
-          .on('*', this.handleUpdates)
-          .subscribe()
+        this.handleUpdates();
       }
-      
-    })
-      
-      
+    });
   }
 
   handleUpdates = () => {
-    fetchData(this.today).then(data=>{
+    fetchData().then((data) => {
+      // console.log(data);
+      this.state = [...this.state, ...data];
+      this.isLoading = false;
     });
 
-    fetchAllData().then(data=> {
-      this.state = data;
+    fetchAllData().then((data) => {
+      // console.log(data);
+      this.history = [...this.history, ...data];
     });
-  }
+  };
 
   static get styles() {
     return css`
-      *, *::before, *::after {
+      *,
+      *::before,
+      *::after {
         margin: 0;
         padding: 0;
       }
@@ -128,7 +143,7 @@ class ChallengeCounter extends LitElement {
       }
       .count {
         font-size: 12rem;
-        letter-spacing: -.25rem;
+        letter-spacing: -0.25rem;
         cursor: pointer;
         line-height: 1.1;
       }
@@ -136,7 +151,7 @@ class ChallengeCounter extends LitElement {
         display: inline-block;
         font-size: inherit;
         color: inherit;
-        padding: .5rem 1rem;
+        padding: 0.5rem 1rem;
         margin-bottom: 1rem;
         border: 1px solid var(--text);
         background-color: var(--bg);
@@ -146,7 +161,7 @@ class ChallengeCounter extends LitElement {
         background: 0;
         border: 1px solid var(--text);
         border-radius: 4px;
-        padding: .5rem 1rem;
+        padding: 0.5rem 1rem;
         font-size: inherit;
         color: inherit;
         cursor: pointer;
@@ -160,58 +175,48 @@ class ChallengeCounter extends LitElement {
         text-align: right;
       }
       td {
-        padding: .25rem;
+        padding: 0.25rem;
       }
     `;
   }
 
   async onClick(event) {
     event.preventDefault();
-    this.count = ++this.count;
-
-    // evil solution!!!
-    if (this.state.filter(item=>item.day === this.today).length) {
-      const { data, error } = 
-      await supabase
-        .from('count')
-        .update({count : this.count })
-        .eq('day', this.today);
-
-    } else {
-      const { data, error } = 
-        await supabase
-          .from('count')
-          .insert([{
-            user_id: supabase.auth.user().id,
-            day: this.today,
-            count : this.count,
-          }]);
-    }
-    this.state = await fetchAllData();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    const { user } = session;
+    const { data, error } = await supabase.from('count').insert([
+      {
+        user_id: user.id,
+      },
+    ]);
+    const res = await fetchData();
+    this.state = [...this.state, res];
   }
 
   async onUIClick() {
-    if (!this.isDashboard) this.state = await fetchAllData();
+    if (!this.isDashboard) this.history = await fetchAllData();
     this.isDashboard = !this.isDashboard;
   }
 
   async onSubmitSetTarget(event) {
     event.preventDefault();
-    const { data, error } = 
-      await supabase
-        .from('profile')
-        .update({
-          count_target : event.currentTarget.countTarget.value,
-        })
-        .eq('id', this.user.id).single();
+    const { data, error } = await supabase
+      .from('profile')
+      .update({
+        count_target: event.currentTarget.countTarget.value,
+      })
+      .eq('id', this.user.id)
+      .select()
+      .single();
 
     if (data) {
       this.user = {
         ...this.user,
         count_target: data.count_target,
-      }
+      };
     }
-    console.log(data);
   }
 
   async handleSignIn(event) {
@@ -219,14 +224,12 @@ class ChallengeCounter extends LitElement {
     const formData = new FormData(event.currentTarget);
     const email = formData.get('user');
     supabase.auth
-      .signIn({ email }, { redirectTo: 'https://cc.k4330.com' })
+      .signInWithOtp({ email }, { redirectTo: window.location.href })
       .then((response) => {
         this.isLoginSubmitted = true;
-        //response.error ? alert(response.error.message) : this.setToken(response);
       })
       .catch((err) => {
         console.log(err);
-        //alert(err.response.text);
       });
   }
 
@@ -261,95 +264,85 @@ class ChallengeCounter extends LitElement {
   `;
 
   render() {
+    // if (this.isLoading) return html` Loading ...`;
 
-    if (this.isLoginSubmitted) return html`
-        Please check your email!
-      `
+    if (this.isLoginSubmitted) return html` Please check your email! `;
 
-    if (!this.isAuthorized) return html`
-        ${this.renderSignIn()}
-      `
+    if (!this.isAuthorized) return html` ${this.renderSignIn()} `;
 
-    if (this.isDashboard) return html`
-      <button
-        style="position: absolute; right:1rem; top:1rem"
-        @click=${this.onUIClick}>
-        Close
-      </button>
-      <table>
-        <tbody>
-          ${this.state.map((entry) => html`
+    if (this.isDashboard)
+      return html`
+        <button
+          style="position: fixed; right:1rem; top:1rem"
+          @click=${this.onUIClick}
+        >
+          Close
+        </button>
+        <table>
+          <tbody>
+            ${this.history.map(
+              (entry) => html`
+                <tr>
+                  <td>${niceDate(entry.created_at)}</td>
+                  <td>1</td>
+                </tr>
+              `,
+            )}
+          </tbody>
+          <tfoot>
             <tr>
               <td>
-                ${niceDate(entry.day)}
+                <strong> Gesamt </strong>
               </td>
               <td>
-                ${entry.count}
+                <strong> ${this.history.length} </strong>
               </td>
             </tr>
-            `
-          )}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td>
-              <strong>
-                Gesamt
-              </strong>
-            </td>
-            <td>
-              <strong>
-                ${this.state.reduce((prev, curr) => prev + curr.count , 0)}
-              </strong>
-            </td>
-          </tr>
-        </tfoot>
-      </table><br/><br/>
-      <form @submit=${this.onSubmitSetTarget}>
-        <input 
-          type="number"
-          name="countTarget"
-          .value=${this.user.count_target} 
-          size="8"
-          style="max-width: 4rem"
+          </tfoot>
+        </table>
+        <br /><br />
+        <form @submit=${this.onSubmitSetTarget}>
+          <input
+            type="number"
+            name="countTarget"
+            .value=${this.user.count_target}
+            size="8"
+            style="max-width: 4rem"
           />
-        <button submit>Set</button>
-      </form><br/>
-      ${supabase.auth.user().email}<br/><br/>
-      <button  
-        @click=${this.handleLogOut}>
-        Logout
-      </button>
-    `
+          <button submit>Set</button>
+        </form>
+        <br />
+        ${this.user.email}<br /><br />
+        <button @click=${this.handleLogOut}>Logout</button>
+      `;
 
     // Default not loading state
-    if (!this.isLoading) return html`
-      <p>
-        ${this.user.count_target} Push Up Challenge<br/>
-        ${niceDate(Date.now())}
-      </p>
-      <p 
-        class="count"
-        @click=${this.onClick}
+    if (!this.isLoading)
+      return html`
+        <p>
+          ${this.user.count_target} Push Up Challenge<br />
+          ${niceDate(Date.now())}
+        </p>
+        <p
+          class="count"
+          @click=${this.onClick}
         >
-        ${this.count !== null ? this.user.count_target - this.count < 0 ? '+' : '' : ''}${this.count !== null ? Math.abs(this.user.count_target - this.count) : ''}
-      </p>
-      <button 
-        class="btn-count"  
-        @click=${this.onClick}>
-        Count
-      </button>
+          ${this.user.count_target - this.state.length}
+        </p>
+        <button
+          class="btn-count"
+          @click=${this.onClick}
+        >
+          Count
+        </button>
 
-      <button
-        style="position: absolute; right:1rem; top:1rem"
-        @click=${this.onUIClick}>
-        Dashboard
-      </button>
-    `
-
-    return html`
-      loading ...
-     `
+        <button
+          style="position: absolute; right:1rem; top:1rem"
+          @click=${this.onUIClick}
+        >
+          Dashboard
+        </button>
+      `;
   }
 }
 
