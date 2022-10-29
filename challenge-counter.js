@@ -51,9 +51,11 @@ const fetchProfile = async () => {
 const fetchData = async () => {
   const { data, error } = await supabase
     .from('count')
-    .select('*', { count: 'exact' })
+    .select('*', { count: 'exact', head: false })
     .gte('created_at', new Date().toDateString());
   // .lte('created_at', new Date().toDateString());
+
+  console.log(data);
 
   if (error) {
     console.log(error);
@@ -62,7 +64,10 @@ const fetchData = async () => {
 };
 
 const fetchAllData = async () => {
-  const { data, error } = await supabase.from('count').select('*');
+  const { data, error } = await supabase
+    .from('count')
+    .select('*')
+    .order('created_at', { ascending: true });
   if (error) {
     console.log(error);
   }
@@ -117,13 +122,13 @@ class ChallengeCounter extends LitElement {
   handleUpdates = () => {
     fetchData().then((data) => {
       // console.log(data);
-      this.state = [...this.state, ...data];
+      this.state = data;
       this.isLoading = false;
     });
 
     fetchAllData().then((data) => {
       // console.log(data);
-      this.history = [...this.history, ...data];
+      this.history = [...data];
     });
   };
 
@@ -192,6 +197,7 @@ class ChallengeCounter extends LitElement {
       },
     ]);
     const res = await fetchData();
+    console.log('RES: ', res);
     this.state = [...this.state, res];
   }
 
