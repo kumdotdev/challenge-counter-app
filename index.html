@@ -1,43 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Challenge Counter</title>
-  <style>
-    :root {
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge Counter</title>
+    <style>:root
+    {
       --bg: white;
       --text: #222;
+      --dimmed: #bbb;
+      --radius: 4px;
     }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #222;
-        --text: #ededed;
-      }
+    @media(prefers-color-scheme: dark){:root {
+      --bg: #222;
+      --text: #ddd;
+      --dimmed: #666;
     }
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      display: grid;
-      place-content: center;
-      font-family: sans-serif;
-      line-height: 1.5;
-      min-height: 100vh;
-      text-align: center;
-      color: var(--text);
-      background-color: var(--bg);
-    }
+  }
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    margin: 0;
+    background-color: var(--bg);
+  }
   </style>
 
-  <script src="./challenge-counter.js?v2.2.0" type="module"></script>
+  <script src="./challenge-counter.js?v2.4.4" type="module"></script>
 </head>
 
 <body>
   <challenge-counter></challenge-counter>
-</body>
+</body></html>
 
-</html>

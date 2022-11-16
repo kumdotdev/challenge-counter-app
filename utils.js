@@ -1,12 +1,12 @@
 export const loadState = (name) => {
   try {
     const serializedState = localStorage.getItem(name);
-    if ( serializedState === null) return undefined;
+    if (serializedState === null) return undefined;
     return JSON.parse(serializedState);
   } catch (error) {
     return undefined;
   }
-}
+};
 
 export const saveState = (name, state) => {
   try {
@@ -15,7 +15,7 @@ export const saveState = (name, state) => {
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 export const debounce = (fn, wait) => {
   let timer;
@@ -50,3 +50,26 @@ export function throttle(fn, threshold, scope) {
     }
   };
 }
+
+export const dayShort = (date = Date.now()) =>
+  new Date(date).toISOString().substring(0, 10);
+
+export const niceDate = (date) =>
+  new Date(date).toLocaleDateString('de-DE', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+export const toISODateShort = (string) =>
+  new Date(string).toISOString().slice(0, 10);
+
+export const groupByDate = (objectArray, dateProperty) =>
+  objectArray.reduce(function (acc, obj) {
+    var key = toISODateShort(obj[dateProperty]);
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(obj);
+    return acc;
+  }, {});

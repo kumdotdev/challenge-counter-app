@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+    <script>
+      const test = [
+        {
+          id: 204,
+          created_at: '2022-10-21T05:36:44.350578+00:00',
+          count: 24,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 207,
+          created_at: '2022-10-23T08:58:33.897579+00:00',
+          count: 7,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 231,
+          created_at: '2022-10-23T16:17:42.430033+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 232,
+          created_at: '2022-10-23T16:26:57.281154+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 233,
+          created_at: '2022-10-23T16:26:58.245275+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 234,
+          created_at: '2022-10-23T16:27:29.497078+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 235,
+          created_at: '2022-10-23T16:27:30.160109+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 236,
+          created_at: '2022-10-23T16:27:30.912273+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 237,
+          created_at: '2022-10-23T17:02:24.806405+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 238,
+          created_at: '2022-10-23T17:02:26.269554+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 239,
+          created_at: '2022-10-23T17:02:27.151969+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 240,
+          created_at: '2022-10-23T17:06:50.334818+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 241,
+          created_at: '2022-10-23T17:07:22.641848+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 242,
+          created_at: '2022-10-23T17:10:39.330101+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 243,
+          created_at: '2022-10-23T17:17:32.321123+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 244,
+          created_at: '2022-10-23T17:17:42.059903+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 245,
+          created_at: '2022-10-23T17:17:42.821007+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 246,
+          created_at: '2022-10-23T17:17:43.637803+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 269,
+          created_at: '2022-10-23T19:16:57.95737+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 270,
+          created_at: '2022-10-23T19:17:05.131492+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 271,
+          created_at: '2022-10-23T19:17:27.594811+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 272,
+          created_at: '2022-10-23T19:18:21.916093+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 273,
+          created_at: '2022-10-23T19:29:48.427905+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 274,
+          created_at: '2022-10-23T19:29:50.238767+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 275,
+          created_at: '2022-10-23T19:29:51.385395+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 276,
+          created_at: '2022-10-23T20:47:27.915655+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 277,
+          created_at: '2022-10-23T20:47:31.277448+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 278,
+          created_at: '2022-10-23T20:47:31.418141+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 279,
+          created_at: '2022-10-23T20:47:31.587614+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 280,
+          created_at: '2022-10-23T20:47:31.825504+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 281,
+          created_at: '2022-10-23T20:47:31.959064+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 282,
+          created_at: '2022-10-23T20:47:32.192979+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 283,
+          created_at: '2022-10-23T20:47:32.303574+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 284,
+          created_at: '2022-10-23T20:47:32.472486+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 285,
+          created_at: '2022-10-23T20:47:32.640349+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 286,
+          created_at: '2022-10-23T20:47:32.841964+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 287,
+          created_at: '2022-10-23T20:47:33.026812+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 288,
+          created_at: '2022-10-23T20:47:33.230679+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 289,
+          created_at: '2022-10-23T20:47:33.551716+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 290,
+          created_at: '2022-10-23T21:01:56.807452+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 535,
+          created_at: '2022-10-29T12:12:42.476116+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 536,
+          created_at: '2022-10-29T12:12:45.096149+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 537,
+          created_at: '2022-10-29T12:12:47.18358+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 538,
+          created_at: '2022-10-29T12:12:48.214744+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+        {
+          id: 539,
+          created_at: '2022-10-29T12:12:49.549202+00:00',
+          count: null,
+          user_id: '2cde7ac7-7be4-4bec-9920-6ccc268c0f06',
+        },
+      ];
+
+       const toISOStringShort = (string) =>
+        new Date(string).toISOString().slice(0, 10);
+
+       const groupByDate = (objectArray, dateProperty) =>
+        objectArray.reduce(function (acc, obj) {
+          var key = toISOStringShort(obj[dateProperty]);
+          if (!acc[key]) {
+            acc[key] = [];
+          }
+          acc[key].push(obj);
+          return acc;
+        }, {});
+
+      console.log(groupByDate(test, 'created_at'));
+    </script>
+  </head>
+  <body></body>
+</html>
