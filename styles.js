@@ -7,6 +7,7 @@ import { css } from 'https://unpkg.com/lit-element/lit-element.js?module';
       *::after {
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
       }
       * {
         -webkit-appearance: none;
@@ -93,5 +94,10 @@ import { css } from 'https://unpkg.com/lit-element/lit-element.js?module';
       }
       .history-list::-webkit-scrollbar {
         display: none;
+      }
+      label {
+        color: var(--dimmed);
+        display: block;
+        text-align: initial;
       }
     `;

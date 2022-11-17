@@ -96,13 +96,14 @@ class ChallengeCounter extends LitElement {
     this.isDashboard = !this.isDashboard;
   }
 
-  async onSubmitSetTarget(event) {
+  async onSubmitUpdateProfile(event) {
     event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const formDataJSON = {};
+    formData.forEach((value, key) => (formDataJSON[key] = value));
     const { data, error } = await supabase
       .from('profile')
-      .update({
-        count_target: event.currentTarget.countTarget.value,
-      })
+      .update(formDataJSON)
       .eq('id', this.user.id)
       .select()
       .single();
@@ -110,9 +111,11 @@ class ChallengeCounter extends LitElement {
     if (data) {
       this.user = {
         ...this.user,
-        count_target: data.count_target,
+        ...formDataJSON,
       };
+      alert('Profile updated');
     }
+    if (error) alert(error.message);
   }
 
   async handleSignIn(event) {
@@ -198,17 +201,29 @@ class ChallengeCounter extends LitElement {
               )}
           </div>
           <form
-            style="grid-area: form"
-            @submit=${this.onSubmitSetTarget}
+            style="grid-area: form; display: grid;grid-auto-rows: max-content;gap:1rem;justify-self: center;max-width:17rem"
+            @submit=${this.onSubmitUpdateProfile}
           >
-            <input
-              type="number"
-              name="countTarget"
-              .value=${this.user.count_target}
-              size="10"
-              style="max-width: 4rem"
-            />
-            <button submit>Set Target</button>
+            <div>
+              <label>Challenge Name</label>
+              <input
+                type="text"
+                name="challenge_name"
+                .value=${this.user.challenge_name}
+                style="width:100%;max-width: 20rem"
+              />
+            </div>
+            <div>
+              <label>Count Target</label>
+              <input
+                type="number"
+                name="count_target"
+                .value=${this.user.count_target}
+                size="10"
+                style="width:100%;max-width: 20rem"
+              />
+            </div>
+            <button submit>Update</button>
           </form>
           <div style="grid-area: logout;">
             ${this.user.email}
