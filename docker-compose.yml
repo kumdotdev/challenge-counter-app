@@ -1,0 +1,9 @@
+name: challenge-counter
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - '8063:80'
+    volumes:
+      - ./public:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
