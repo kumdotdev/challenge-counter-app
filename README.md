@@ -1,8 +1,9 @@
-// war ursprünglich als kleine digitale hilfe bei der
-// push up challenge gedacht
-// zu erst einfacher count-state als localstorage
+# Challenge-Counter-App
 
-// dann kam noch jwt mit php dazu, als übung ... und die speicherung
-// auf dem server als json in datei
+war ursprünglich als kleine digitale hilfe bei der push up challenge gedacht
+zu erst einfacher count-state als localstorage
 
-// dann nooch mal die anbindung an supabase ...
+dann kam noch jwt mit php dazu, als übung ... und die speicherung
+auf dem server als json in datei
+
+dann nooch mal die anbindung an supabase ...
