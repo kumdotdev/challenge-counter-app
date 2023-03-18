@@ -1,9 +1,11 @@
-# Challenge-Counter-App
+# Challenge Counter App
 
-war ursprünglich als kleine digitale hilfe bei der push up challenge gedacht
-zu erst einfacher count-state als localstorage
+A private experiment. Was originally meant as a private little digital helper for counting daily athletic challenges.
 
-dann kam noch jwt mit php dazu, als übung ... und die speicherung
-auf dem server als json in datei
+The first simple attempt was persisting state via localstorage. Then moved to Supabase as BaaS to store user config and data and use magical login.
 
-dann nooch mal die anbindung an supabase ...
+![Preview](/docs/assets/preview.png?raw=true "Preview")
+
+## Demo
+
+https://cc.kum.rocks
