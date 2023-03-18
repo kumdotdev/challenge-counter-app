@@ -1,6 +1,7 @@
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
 import { groupByDate } from './utils.js';
 
+// no panic! this is a public anon key ...
 const SUPABASE_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzMTg5Njc0NywiZXhwIjoxOTQ3NDcyNzQ3fQ.4z6eizw4N98xNyfEW7NJvpGKCcLOsXHbzDLK5X0BMfw';
 const SUPABASE_URL = 'https://fbvcrmpsstlvjvayifbe.supabase.co';
