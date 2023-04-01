@@ -1,4 +1,4 @@
-import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+import { createClient } from 'https://cdn.skypack.dev/pin/@supabase/supabase-js@v2.13.0-x4xpETFPh6wJxq6cOri2/mode=imports,min/optimized/@supabase/supabase-js.js';
 import { groupByDate } from './utils.js';
 
 // no panic! this is a public anon key ...
