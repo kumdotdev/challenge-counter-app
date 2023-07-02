@@ -1,6 +1,8 @@
 services:
   web:
-    image: nginx:alpine
+    build: 
+      context: .
+      target: base
     ports:
       - '8063:80'
     restart: unless-stopped
