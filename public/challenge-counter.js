@@ -1,7 +1,7 @@
 import {
   LitElement,
   html,
-} from 'https://unpkg.com/lit-element/lit-element.js?module';
+} from 'https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js';
 import { supabase, fetchData, fetchAllData, fetchProfile } from './api.js';
 import { niceDate } from './utils.js';
 import { styles } from './styles.js';
