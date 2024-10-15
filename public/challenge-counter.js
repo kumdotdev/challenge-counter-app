@@ -19,6 +19,7 @@ class ChallengeCounter extends LitElement {
       isLoginSubmitted: { type: Boolean },
       isDashboard: { type: Boolean },
       isLoading: { type: Boolean },
+      wakeLock: { type: Object },
     };
   }
 
@@ -32,24 +33,35 @@ class ChallengeCounter extends LitElement {
     this.isLoginSubmitted = false;
     this.isDashboard = false;
     this.isLoading = true;
+    this.wakeLock = null;
   }
 
   async connectedCallback() {
     super.connectedCallback();
-    this.requestWakeLock();
     this.checkUser();
     supabase.auth.onAuthStateChange(async () => {
       this.checkUser();
     });
   }
 
+  // see https://whatpwacando.today/wake-lock
   async requestWakeLock() {
-    // see https://whatpwacando.today/wake-lock
     try {
-      await navigator.wakeLock.request('screen');
-    } catch (error) {
-      console.error(`${error.name}, ${error.message}`);
+      this.wakeLock = await navigator.wakeLock.request('screen');
+
+      this.wakeLock.addEventListener('release', () => {
+        // console.log('Wake Lock was released');
+      });
+      // console.log('Wake Lock is active');
+    } catch (err) {
+      console.error(`${err.name}, ${err.message}`);
     }
+  }
+
+  releaseWakeLock() {
+    // console.log('releasing wakeLock');
+    this.wakeLock?.release();
+    this.wakeLock = null;
   }
 
   async checkUser() {
@@ -242,6 +254,13 @@ class ChallengeCounter extends LitElement {
               @click=${this.handleLogOut}
             >
               Logout
+            </button>
+            <button
+              style="padding: .25rem .5rem;"
+              @click=${() =>
+                this.wakeLock ? this.releaseWakeLock() : this.requestWakeLock()}
+            >
+              ${this.wakeLock ? 'Release' : 'Lock'} Screen
             </button>
           </div>
         </div>
