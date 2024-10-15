@@ -36,10 +36,20 @@ class ChallengeCounter extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback();
+    this.requestWakeLock();
     this.checkUser();
     supabase.auth.onAuthStateChange(async () => {
       this.checkUser();
     });
+  }
+
+  async requestWakeLock() {
+    // see https://whatpwacando.today/wake-lock
+    try {
+      await navigator.wakeLock.request('screen');
+    } catch (error) {
+      console.error(`${error.name}, ${error.message}`);
+    }
   }
 
   async checkUser() {
