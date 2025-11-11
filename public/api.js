@@ -1,10 +1,10 @@
-import { createClient } from 'https://cdn.skypack.dev/pin/@supabase/supabase-js@v2.13.0-x4xpETFPh6wJxq6cOri2/mode=imports,min/optimized/@supabase/supabase-js.js';
+import { createClient } from 'https://cdn.skypack.dev/pin/@supabase/supabase-js@v2.81.1-9WFD4ARoitBmWAKgCd9B/mode=imports,min/optimized/@supabase/supabase-js.js';
 import { groupByDate } from './utils.js';
 
 // no panic! this is a public anon key ...
 const SUPABASE_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzMTg5Njc0NywiZXhwIjoxOTQ3NDcyNzQ3fQ.4z6eizw4N98xNyfEW7NJvpGKCcLOsXHbzDLK5X0BMfw';
-const SUPABASE_URL = 'https://fbvcrmpsstlvjvayifbe.supabase.co';
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc2MTQxNDM2MCwiZXhwIjo0OTE3MDg3OTYwLCJyb2xlIjoiYW5vbiJ9.TQgk86vspFhjArvT-LU7-Qfqe2rqVTw18mH2VAqkulE';
+const SUPABASE_URL = 'https://supabasekong-fwco0gwcckw08o0kocw4ksck.playground.kum.rocks';
 export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 export const fetchData = async () => {
